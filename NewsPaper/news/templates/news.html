@@ -1,0 +1,59 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+<h1>Все посты</h1>
+
+   <hr>
+   {% if poste %}
+       <table>
+           <tr>
+               <td>Название</td>
+               <td>Дата публикации</td>
+               <td>Статья</td>
+               <td>Ссылки</td>
+           </tr>
+           {% for new in poste %}
+           <tr>
+               <td>{{ new.author }}</td>
+               <td>{{ new.title }}</td>
+               <td>{{ new.dateCreation|date:'M d Y' }}</td>
+               <td><div>{{ new.text|censor|truncatewords:20 }}</div></td>
+               <td><a href="{{ new.id }}" > Подробнее </a></td>
+               <td><a href="{{ new.id }}/edit/" > Изменить </a></td>
+               <td><a href="{{ new.id }}/delete/" > Удалить </a></td>
+           </tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+   {% endif %}
+
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+
+
+{% endblock content %}
+
+
